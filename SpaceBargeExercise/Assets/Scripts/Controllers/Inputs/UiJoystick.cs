@@ -3,17 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(RectTransform))]
 public class UiJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
 {
-    public float returnSpeed = 500.0f;
-    public Vector2 GetInput => joystickMagnitude > deadZone && dragging ? handle.anchoredPosition.normalized : Vector2.zero;
+    [Header("Joystick Components")]
     [SerializeField] private RectTransform handle;
     [SerializeField] private CanvasGroup joystickColor;
+
+    [Header("Joystick Alpha")]
+    [SerializeField] private float minimumAlpha = 0.15f;
+    [SerializeField] private float maximumAlpha = 0.85f;
+    [SerializeField] private float fadeInSpeed = 2.0f;
+    [SerializeField] private float fadeOutSpeed = 1.5f;
+
+    [Header("Joystick Settings")]
+    private float deadzoneRadius = 0.05f;
+    public float releaseSpeed = 500.0f;
+    public bool dragging = false;
+
+    // Joyistick Inputs
+    public Vector2 GetInput() => joystickMagnitude > deadzone && dragging ? handle.anchoredPosition.normalized : Vector2.zero;
+    public float GetThrustPower() => joystickMagnitude > deadzone && dragging ? joystickMagnitude / radius : 0.0f;
+
+    // Private Members
     private RectTransform joystickBase;
-    private bool dragging = false;
     private float radius => Mathf.Min(joystickBase.rect.width, joystickBase.rect.height)*0.5f;
-    private float deadZone => radius * 0.05f;
+    private float deadzone => radius * deadzoneRadius;
     private float joystickMagnitude => handle.anchoredPosition.magnitude;
+
 
     void Start() 
     {
@@ -22,12 +39,12 @@ public class UiJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
     void Update()
     {
         if (!dragging)
-            handle.anchoredPosition = Vector2.MoveTowards(handle.anchoredPosition, Vector2.zero, returnSpeed * Time.deltaTime);
+            handle.anchoredPosition = Vector2.MoveTowards(handle.anchoredPosition, Vector2.zero, releaseSpeed * Time.deltaTime);
         UpdateUiTransparency();
     }
     void UpdateUiTransparency()
     {
-        joystickColor.alpha = Mathf.Clamp(joystickColor.alpha + Time.deltaTime * (dragging ? 2.0f : -1.5f), 0.3f, 0.85f);
+        joystickColor.alpha = Mathf.Clamp(joystickColor.alpha + Time.deltaTime * (dragging ? fadeInSpeed : -fadeOutSpeed), minimumAlpha, maximumAlpha);
     }
     public void OnDrag(PointerEventData data)
     {
