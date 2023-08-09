@@ -30,6 +30,7 @@ public class UiJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
     private float radius => Mathf.Min(joystickBase.rect.width, joystickBase.rect.height)*0.5f;
     private float deadzone => radius * deadzoneRadius;
     private float joystickMagnitude => handle.anchoredPosition.magnitude;
+    private float maxTravelRadius => radius - handle.rect.width * 0.5f;
 
 
     void Start() 
@@ -50,9 +51,9 @@ public class UiJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
     {
         dragging = data.dragging;
         if (data.dragging)
-            handle.anchoredPosition += data.delta;
-        if (joystickMagnitude > radius)
-            handle.anchoredPosition = handle.anchoredPosition.normalized * radius;
+            handle.anchoredPosition += data.delta * 0.5f;
+        if (joystickMagnitude > maxTravelRadius)
+            handle.anchoredPosition = handle.anchoredPosition.normalized * maxTravelRadius;
     }
     public void OnEndDrag(PointerEventData data)
     {

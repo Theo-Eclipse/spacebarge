@@ -5,7 +5,7 @@ using UnityEngine;
 public class DefaultFlierControl : BasicFlier
 {
     public UiJoystick screenJoystick;
-    private Vector2 inputAxis => new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+    private Vector2 InputAxis => new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     public float ThrustPowerDebug = 0.0f;
     // Update is called once per frame
     protected override void Update()
@@ -14,10 +14,10 @@ public class DefaultFlierControl : BasicFlier
 
         if (screenJoystick.GetThrustPower() > thrustPower)
             thrustPower = screenJoystick.GetThrustPower();
-        if (inputAxis.magnitude > 0.1f)
+        if (InputAxis.magnitude > 0.1f)
         {
-            thrustPower = Mathf.Clamp01(inputAxis.magnitude);
-            HandleInput(inputAxis);
+            thrustPower = Mathf.Clamp01(InputAxis.magnitude);
+            HandleInput(InputAxis);
         }
         else
         {

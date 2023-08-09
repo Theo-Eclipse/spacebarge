@@ -6,7 +6,7 @@ using UnityEngine;
 public class BasicFlier : MonoBehaviour, IDirectionInputHandler
 {
     [Header("Flier Components")]
-    [SerializeField] private Rigidbody flierBody;
+    [SerializeField] protected Rigidbody flierBody;
 
     [Header("Flier Thrusters")]
     [SerializeField] private ParticleSystem[] forwardThrusters;
@@ -26,12 +26,12 @@ public class BasicFlier : MonoBehaviour, IDirectionInputHandler
     public Vector3 headingDirection;
     public Transform lockAtTarget;
 
-    private float angleToDirection => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(headingDirection.x, headingDirection.z));
-    private float angleToAxisInput => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(thrustInputDirection.x, thrustInputDirection.z));
-    private float torqueToDirection => (Mathf.InverseLerp(90, -90, angleToDirection) - 0.5f) * 2.0f;
-    private bool hasThrustInput => thrustPower > 0.01f && thrustInputDirection.magnitude > 0.01f;
-    private bool hasTargetOrMoving => lockAtTarget || hasThrustInput;
-    private bool canThrustForward => (Mathf.Abs(angleToAxisInput) < 5 || thrustPower > 0.5f) && Mathf.Abs(angleToAxisInput) < 120;
+    protected float AngleToDirection => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(headingDirection.x, headingDirection.z));
+    protected float AngleToAxisInput => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(thrustInputDirection.x, thrustInputDirection.z));
+    private float TorqueToDirection => (Mathf.InverseLerp(90, -90, AngleToDirection) - 0.5f) * 2.0f;
+    private bool HasThrustInput => thrustPower > 0.01f && thrustInputDirection.magnitude > 0.01f;
+    private bool HasTargetOrMoving => lockAtTarget || HasThrustInput;
+    private bool CanThrustForward => (Mathf.Abs(AngleToAxisInput) < 5 || thrustPower > 0.5f) && Mathf.Abs(AngleToAxisInput) < 120;
 
     // Reset is called once the this component added to a game object.
     private void Reset()
@@ -49,17 +49,17 @@ public class BasicFlier : MonoBehaviour, IDirectionInputHandler
     protected virtual void Update()
     {
         GetHeading();
-        if(hasTargetOrMoving)
+        if(HasTargetOrMoving)
             RotateTowardsTarget();
-        if (hasThrustInput)
+        if (HasThrustInput)
             ThrustManeur();
-        if (hasThrustInput && canThrustForward)
+        if (HasThrustInput && CanThrustForward)
             ThrustForward();
 
         foreach (var thruster in forwardThrusters)
-            if (canThrustForward && thrustPower >= 0.25f && !thruster.isPlaying)
+            if (CanThrustForward && thrustPower >= 0.25f && !thruster.isPlaying)
                 thruster.Play();
-            else if ((!canThrustForward || thrustPower < 0.25f) && thruster.isPlaying)
+            else if ((!CanThrustForward || thrustPower < 0.25f) && thruster.isPlaying)
                 thruster.Stop();
 
         ApplyVelocityAndInputDumping();
@@ -75,7 +75,7 @@ public class BasicFlier : MonoBehaviour, IDirectionInputHandler
     private void RotateTowardsTarget() 
     {
         if (Mathf.Abs(flierBody.angularVelocity.y) < maxAngularVelocity * Mathf.Deg2Rad)
-            flierBody.AddTorque(new Vector3(0, rotationSpeed * Mathf.Deg2Rad * torqueToDirection, 0), ForceMode.Force);
+            flierBody.AddTorque(new Vector3(0, rotationSpeed * Mathf.Deg2Rad * TorqueToDirection, 0), ForceMode.Force);
         flierBody.angularVelocity = new Vector3(0, Mathf.Clamp(flierBody.angularVelocity.y, -maxAngularVelocity * Mathf.Deg2Rad, maxAngularVelocity * Mathf.Deg2Rad), 0);
     }
 
