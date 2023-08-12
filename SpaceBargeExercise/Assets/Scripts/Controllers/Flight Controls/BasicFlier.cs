@@ -11,7 +11,7 @@ public class BasicFlier : MonoBehaviour, IDirectionInputHandler
     [Header("Flier Thrusters")]
     [SerializeField] private ParticleSystem[] forwardThrusters;
 
-    [Header("Flier Settings")]
+    [Space, Header("Flier Settings")]
     public float maxVelocity = 10;
     public float maxAngularVelocity = 200;
     public float forwardSpeed = 8;
@@ -26,9 +26,9 @@ public class BasicFlier : MonoBehaviour, IDirectionInputHandler
     public Vector3 headingDirection;
     public Transform lockAtTarget;
 
-    protected float AngleToDirection => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(headingDirection.x, headingDirection.z));
+    protected float AngleOfDirection => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(headingDirection.x, headingDirection.z));
     protected float AngleToAxisInput => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(thrustInputDirection.x, thrustInputDirection.z));
-    private float TorqueToDirection => (Mathf.InverseLerp(90, -90, AngleToDirection) - 0.5f) * 2.0f;
+    private float TorqueToDirection => (Mathf.InverseLerp(90, -90, AngleOfDirection) - 0.5f) * 2.0f;
     private bool HasThrustInput => thrustPower > 0.01f && thrustInputDirection.magnitude > 0.01f;
     private bool HasTargetOrMoving => lockAtTarget || HasThrustInput;
     private bool CanThrustForward => (Mathf.Abs(AngleToAxisInput) < 5 || thrustPower > 0.5f) && Mathf.Abs(AngleToAxisInput) < 120;
