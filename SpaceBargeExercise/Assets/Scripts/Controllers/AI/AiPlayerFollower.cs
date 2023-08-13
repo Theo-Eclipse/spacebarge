@@ -9,7 +9,7 @@ public class AiPlayerFollower : BasicAiFlier
     public float followDistance = 4;
     public float updateInterval = 2;
     public Transform followTarget;
-    private Vector3 FollowPosition => followTarget.position + Vector3.left * followDistance;
+    private Vector3 FollowPosition => followTarget.position + followTarget.forward * followDistance;
 
     private float followIntervalHit;
     // Update is called once per frame
