@@ -11,13 +11,15 @@ public class BasicFlier : MonoBehaviour, IDirectionInputHandler
     [Header("Flier Thrusters")]
     [SerializeField] private ParticleSystem[] forwardThrusters;
 
-    [Space, Header("Flier Settings")]
-    public float maxVelocity = 10;
-    public float maxAngularVelocity = 200;
-    public float forwardSpeed = 8;
-    public float maneurSpeed = 3;
-    public float rotationSpeed = 800;
-    public float velocityDumping = 0.99f;
+    [Space, Header("Flier Stats")]
+    public FlierStats stats = new FlierStats() {
+        maxVelocity = 10.0f,
+        maxAngularVelocity = 200,
+        forwardSpeed = 8,
+        maneurSpeed = 3,
+        rotationSpeed = 500,
+        velocityDumping = 0.98f
+    };
 
     [Header("Flier Inputs")]
     [Range(0, 1)]
@@ -74,32 +76,32 @@ public class BasicFlier : MonoBehaviour, IDirectionInputHandler
 
     private void RotateTowardsTarget() 
     {
-        if (Mathf.Abs(flierBody.angularVelocity.y) < maxAngularVelocity * Mathf.Deg2Rad)
-            flierBody.AddTorque(new Vector3(0, rotationSpeed * Mathf.Deg2Rad * TorqueToDirection, 0), ForceMode.Force);
-        flierBody.angularVelocity = new Vector3(0, Mathf.Clamp(flierBody.angularVelocity.y, -maxAngularVelocity * Mathf.Deg2Rad, maxAngularVelocity * Mathf.Deg2Rad), 0);
+        if (Mathf.Abs(flierBody.angularVelocity.y) < stats.maxAngularVelocity * Mathf.Deg2Rad)
+            flierBody.AddTorque(new Vector3(0, stats.rotationSpeed * Mathf.Deg2Rad * TorqueToDirection, 0), ForceMode.Force);
+        flierBody.angularVelocity = new Vector3(0, Mathf.Clamp(flierBody.angularVelocity.y, -stats.maxAngularVelocity * Mathf.Deg2Rad, stats.maxAngularVelocity * Mathf.Deg2Rad), 0);
     }
 
     private void ThrustForward()
     {
-        flierBody.AddForce(transform.forward * forwardSpeed * thrustPower, ForceMode.Force);
+        flierBody.AddForce(transform.forward * stats.forwardSpeed * thrustPower, ForceMode.Force);
         ClampVelocity();
     }
     private void ThrustManeur()
     {
-        flierBody.AddForce(thrustInputDirection * maneurSpeed * thrustPower, ForceMode.Force);
+        flierBody.AddForce(thrustInputDirection * stats.maneurSpeed * thrustPower, ForceMode.Force);
         ClampVelocity();
     }
 
     private void ClampVelocity() 
     {
-        if(flierBody.velocity.magnitude > maxVelocity)
-            flierBody.velocity = flierBody.velocity.normalized * maxVelocity;
+        if(flierBody.velocity.magnitude > stats.maxVelocity)
+            flierBody.velocity = flierBody.velocity.normalized * stats.maxVelocity;
     }
     private void ApplyVelocityAndInputDumping()
     {
         thrustPower = Mathf.Clamp01(thrustPower - Time.deltaTime * 2);
         if (thrustPower <= 0.5f)
-            flierBody.velocity *= velocityDumping;
+            flierBody.velocity *= stats.velocityDumping;
     }
 
     public void HandleInput(Vector2 input)

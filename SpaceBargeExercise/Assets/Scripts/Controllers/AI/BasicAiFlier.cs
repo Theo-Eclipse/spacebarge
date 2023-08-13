@@ -5,7 +5,6 @@ using UnityEngine;
 public class BasicAiFlier : BasicFlier
 {
     [Space, Header("AI Waypoint")]
-    public Transform checkDist;
     public Vector3 destinationPoint = Vector3.zero;
     public Vector3 wayPoint = Vector3.zero;
     public float maxThrustDistance = 12.5f;
@@ -21,7 +20,6 @@ public class BasicAiFlier : BasicFlier
     public LayerMask obstacleLayerMask;
     public float checkInterval = 1.0f;
     public float castDirOffset = 0.0f;
-    public float testAngle = 0;
 
     private int rayIndex = 0;
     private RaycastHit hit;
@@ -30,6 +28,7 @@ public class BasicAiFlier : BasicFlier
 
     private Vector2 InputAxis => new Vector2(wayPoint.x - transform.position.x, wayPoint.z - transform.position.z);
     private Vector3 LastCastPosition => transform.position + sphereCastRay.direction.normalized * castDistance;
+    private bool DestinationIsObscured() => Physics.CheckSphere(destinationPoint, castRadius, obstacleLayerMask);
     private float TargetThrust()
     {
         if (lockAtTarget)
@@ -71,12 +70,16 @@ public class BasicAiFlier : BasicFlier
 
     private void UpdateWayPoint() 
     {
-        wayPoint = destinationPoint - transform.position;
-        if (CastTest(wayPoint.normalized))
-            wayPoint = GetAvoidObstaclePoint(destinationPoint);
-        else
-            wayPoint = wayPoint.magnitude < castDistance ? transform.position + wayPoint : transform.position + wayPoint.normalized * castDistance;
         move = true;
+        wayPoint = destinationPoint - transform.position;
+        if(wayPoint.magnitude < castDistance && DestinationIsObscured())
+            OnWayPointReached();
+        else if (CastTest(wayPoint.normalized))
+            wayPoint = GetAvoidObstaclePoint(destinationPoint);
+        else if (wayPoint.magnitude < castDistance && !DestinationIsObscured())
+            wayPoint = transform.position + wayPoint;
+        else
+            wayPoint = transform.position + wayPoint.normalized * castDistance;
     }
 
     private Vector3 GetAvoidObstaclePoint(Vector3 finalDestination) 
@@ -108,15 +111,13 @@ public class BasicAiFlier : BasicFlier
         UpdateWayPoint();
     }
 
-
-
-    public bool CastTest(Vector3 direction) 
+    private bool CastTest(Vector3 direction) 
     {
         sphereCastRay = new Ray(transform.position + castDirOffset * direction.normalized, direction);
         return Physics.SphereCast(sphereCastRay, castRadius, out hit, castDistance, obstacleLayerMask);
     }
-
-    private void OnDrawGizmos()
+    
+    protected virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(wayPoint, 0.5f);
