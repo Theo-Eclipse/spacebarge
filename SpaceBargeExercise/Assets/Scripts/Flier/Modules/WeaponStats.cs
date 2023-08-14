@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ModuleEffect : BuffEffect
+public struct WeaponStats
 {
-
+    public float damage;
+    public float shootInterval;
 }
