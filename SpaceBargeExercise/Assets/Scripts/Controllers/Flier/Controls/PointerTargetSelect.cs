@@ -11,13 +11,17 @@ namespace Flier.Controls
         [SerializeField] private DefaultFlierControl playerFlier;
         [SerializeField] private LayerMask castLayer;
         [SerializeField] private float castRadius = 1.5f;
-        private Collider[] collidersClicked = new Collider[6];
+        public bool autoLockTarget = false;
+        public float autoLockRadius = 10.0f;
+        public float auoCheckInterval = 1;
+        private Collider[] collidersClicked = new Collider[10];
         private Vector3 lastWorldClickPosition = Vector3.zero;
         private Ray worldPoint;
         private float rayDistance = 10;
         private Plane floor;
         private PointerEventData pointerData;
         private List<RaycastResult> results = new List<RaycastResult>(10);
+        private float nextAutocheckTime = 0;
 
         private void Awake()
         {
@@ -27,12 +31,26 @@ namespace Flier.Controls
         {
 
             playerFlier.onFlierDestroyed.AddListener(ForgetTarget);
+            nextAutocheckTime = Time.time + auoCheckInterval;
         }
 
         private void Update()
         {
             if (Input.GetMouseButtonDown(0))
-                CheckSphereForTargets();
+                CheckSphereForTargets(InputToWorldPosition(), castRadius);
+            if (!playerFlier.lockAtTarget && autoLockTarget)
+                UpdateAutocheckTimer();
+
+
+        }
+
+        private void UpdateAutocheckTimer() 
+        {
+            if (nextAutocheckTime > 0 && Time.time >= nextAutocheckTime) 
+            {
+                CheckSphereForTargets(playerFlier.transform.position, autoLockRadius);
+                nextAutocheckTime = Time.time + auoCheckInterval;
+            }
         }
 
         private Vector3 InputToWorldPosition() 
@@ -44,11 +62,11 @@ namespace Flier.Controls
             return Vector3.zero;
         }
 
-        private void CheckSphereForTargets() 
+        private void CheckSphereForTargets(Vector3 position, float checkRadius) 
         {
             if (getMouseOverUi())
                 return;
-            collidersClicked = Physics.OverlapSphere(InputToWorldPosition(), castRadius, castLayer);
+            collidersClicked = Physics.OverlapSphere(position, checkRadius, castLayer);
             foreach (var collider in collidersClicked)
                 if (collider.GetComponentInParent<BasicAiFlier>())
                 {
@@ -73,14 +91,15 @@ namespace Flier.Controls
                 return;
             playerFlier.lockAtTarget.GetComponent<BasicAiFlier>().onFlierDestroyed.RemoveListener(ForgetTarget);
             playerFlier.lockAtTarget = null;
+            nextAutocheckTime = Time.time + auoCheckInterval;
         }
 
         private void OnDrawGizmos()
         {
-            if (lastWorldClickPosition == Vector3.zero)
-                return;
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(lastWorldClickPosition, castRadius);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(playerFlier.transform.position, autoLockRadius);
         }
         public bool getMouseOverUi()
         {

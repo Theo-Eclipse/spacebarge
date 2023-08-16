@@ -49,7 +49,7 @@ MonoBehaviour:
   lifeTime: 10
   hitMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 257
   onDestroy:
     m_PersistentCalls:
       m_Calls: []

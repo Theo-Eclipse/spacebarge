@@ -85,6 +85,8 @@ public class FlierPartsExplode : MonoBehaviour
 
     private void ResetPart(Collider collider)
     {
+        parts[collider].rigidbody.velocity = Vector3.zero;
+        parts[collider].rigidbody.angularVelocity = Vector3.zero;
         collider.transform.localPosition = parts[collider].initialPosition;
         collider.transform.localRotation = parts[collider].initialRotation;
     }

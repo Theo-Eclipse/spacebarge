@@ -11,7 +11,7 @@ namespace UnityEngine.UI
     {
         [SerializeField] private BasicFlier targetFlier;
         private List<WeaponModule> moduleCache = new List<WeaponModule>();
-        private Toggle fireAllToggle;
+        public Toggle fireAllToggle;
 
         // Start is called before the first frame update
         void Start()

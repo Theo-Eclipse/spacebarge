@@ -49,8 +49,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4f523d2ea842be4a85f24b6846bb6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partsRotationSpeed: 50
-  partsLinearSpeed: 2
+  partsRotationSpeed: 150
+  partsLinearSpeed: 10
   flierEvents: {fileID: 5302537213115503968}
   flierGraphics: {fileID: 5302537212390900564}
   flierDebrisGraphics: {fileID: 2905394138681424414}
@@ -536,7 +536,7 @@ GameObject:
   - component: {fileID: 5302537212031930634}
   - component: {fileID: 5302537212031930633}
   - component: {fileID: 5302537212031930632}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hull
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -630,7 +630,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5302537212390900564}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Graphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -669,7 +669,7 @@ GameObject:
   - component: {fileID: 5302537212823054602}
   - component: {fileID: 5302537212823054601}
   - component: {fileID: 5302537212823054600}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Right Engine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -906,7 +906,7 @@ GameObject:
   - component: {fileID: 5302537213139925577}
   - component: {fileID: 5302537213139925576}
   - component: {fileID: 5302537213139925583}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Left Engine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1005,7 +1005,7 @@ GameObject:
   - component: {fileID: 5302537213344955287}
   - component: {fileID: 5302537213344955286}
   - component: {fileID: 5302537213344955285}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Wings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1102,7 +1102,7 @@ GameObject:
   - component: {fileID: 5302537213414392794}
   - component: {fileID: 5302537213414392793}
   - component: {fileID: 5302537213414392792}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1458,6 +1458,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BasicThruster
       objectReference: {fileID: 0}
+    - target: {fileID: 8836801772104952701, guid: b32ffc497b218814b8781247fd11c27f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b32ffc497b218814b8781247fd11c27f, type: 3}
 --- !u!198 &5302537213447678313 stripped
@@ -1613,6 +1618,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BasicThruster
+      objectReference: {fileID: 0}
+    - target: {fileID: 8836801772104952701, guid: b32ffc497b218814b8781247fd11c27f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b32ffc497b218814b8781247fd11c27f, type: 3}

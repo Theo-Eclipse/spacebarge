@@ -23,7 +23,7 @@ namespace Flier.Controls
         }
         public void SpawnAi()
         {
-            aiInstance.transform.localPosition = Vector3.zero;
+            aiInstance.transform.position = transform.position;
             aiInstance.Respawn();
         }
         public void OnLevelLoaded()
