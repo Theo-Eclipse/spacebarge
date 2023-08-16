@@ -36,7 +36,9 @@ namespace Flier.BuffSystem
         {
             this.flierInstance = flierInstance;
             Type buffType = buffData.buffEffectInstance.GetType();
-            if (flierInstance.effects.ContainsKey(buffType))
+            if (buffData.buffEffectInstance.duration == 0) 
+                buffData.buffEffectInstance.EnableEffect(flierInstance);// 0 duration - means permanent - activate the buff without adding it to effects list.
+            else if (flierInstance.effects.ContainsKey(buffType))
                 StackOverExistingEffect(flierInstance.effects[buffType]);
             else
             {

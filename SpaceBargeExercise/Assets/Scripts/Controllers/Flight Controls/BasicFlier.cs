@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Flier.ModulesAndStats;
+using UnityEngine.Events;
 using Flier.BuffSystem;
 
 namespace Flier
@@ -20,6 +20,7 @@ namespace Flier
         [Space, Header("Flier Stats")]
         public FlierStats sDefault = new FlierStats()
         {
+            health = 100,
             maxVelocity = 10.0f,
             maxAngularVelocity = 200,
             forwardSpeed = 8,
@@ -29,6 +30,7 @@ namespace Flier
         };// Will be calculated from list of installed modules.
         public FlierStats sFinnal = new FlierStats()
         {
+            health = 100,
             maxVelocity = 10.0f,
             maxAngularVelocity = 200,
             forwardSpeed = 8,
@@ -47,6 +49,9 @@ namespace Flier
         [Header("Flier Effects")]
         public Dictionary<Type, Buff> effects = new Dictionary<Type, Buff>();
         public List<Type> removeEffects = new List<Type>();
+
+        [Header("Events")]
+        public UnityEvent onFlierDestroyed = new UnityEvent();
         protected float AngleOfDirection => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(headingDirection.x, headingDirection.z));
         protected float AngleToAxisInput => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(thrustInputDirection.x, thrustInputDirection.z));
         private float TorqueToDirection => (Mathf.InverseLerp(90, -90, AngleOfDirection) - 0.5f) * 2.0f;
@@ -139,6 +144,16 @@ namespace Flier
             foreach (var key in removeEffects)
                 effects.Remove(key);
             removeEffects.Clear();
+        }
+
+        public void DamageOrHeal(float damage) 
+        {
+            sFinnal.health = Mathf.Clamp(sFinnal.health + damage, 0, sDefault.health);
+            if (sFinnal.health == 0)
+            {
+                onFlierDestroyed?.Invoke();
+                enabled = false;
+            }
         }
     }
 }
