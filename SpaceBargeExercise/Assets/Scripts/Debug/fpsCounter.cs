@@ -20,6 +20,13 @@ public class fpsCounter : MonoBehaviour
     private float intervalHit = 0;
     private void UpdateText() => fpsLabel.text = $"FPS: {currentFps:N0}\n\nAverage FPS: {averageFps:N0}\n\nTop FPS: {topFps:N0}\nLowest FPS: {lowestFps:N0}";
 
+    [TextArea]public string otherControls = 
+@"Controls:
+
+Tap/Click on a flier, to lock.
+WSAD/Joystick - Movement.
+";
+
     private void Update()
     {
         UpdateFpsInterval();
@@ -43,6 +50,7 @@ public class fpsCounter : MonoBehaviour
             fpsTakes++;
         }
         else UpdateAverageFps();
+        fpsLabel.text += "\n" + otherControls;
     }
 
     void UpdateAverageFps() 

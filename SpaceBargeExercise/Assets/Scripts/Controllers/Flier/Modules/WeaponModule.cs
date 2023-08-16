@@ -34,9 +34,10 @@ namespace Flier.Modules {
         [SerializeField] private BasicProjectile projectilePrefab;
         [SerializeField] private Transform projectileSpawnPoint;
 
-        private BasicFlier hitFlierInstance;
+        private IDamagable hitTarget;
         private int projIndex = 0;
         private float shootReadyTime = 0;
+        private float startAngle => -(sFinnal.spread * (sFinnal.projectileCount-1)) * 0.5f;
 
         // Update is called once per frame
         public void Update()
@@ -55,7 +56,7 @@ namespace Flier.Modules {
                 LaunchProjectile(transform.forward);
             else
                 for (projIndex = 0; projIndex < sFinnal.projectileCount; projIndex++)
-                    LaunchProjectile(AngleToDirection(-sFinnal.spread * sFinnal.projectileCount * 0.5f + sFinnal.spread * projIndex));
+                    LaunchProjectile(AngleToDirection(startAngle + sFinnal.spread * projIndex));
         }
 
         private void LaunchProjectile(Vector3 direction) 
@@ -71,9 +72,9 @@ namespace Flier.Modules {
         private void OnShotHit(Collider collider) 
         {
             Debug.Log($"Object hit: {collider.gameObject.name}");
-            hitFlierInstance = collider.GetComponentInParent<BasicFlier>();
-            if (hitFlierInstance && hitFlierInstance.enabled)
-                hitFlierInstance.DamageOrHeal(-sFinnal.damagePerHit);
+            hitTarget = collider.GetComponentInParent<IDamagable>();
+            if (hitTarget != null)
+                hitTarget.DamageOrHeal(-sFinnal.damagePerHit);
         }
         private Vector3 AngleToDirection(float angle)
         {

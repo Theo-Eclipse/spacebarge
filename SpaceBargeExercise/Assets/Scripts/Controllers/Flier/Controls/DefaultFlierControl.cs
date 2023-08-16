@@ -7,13 +7,12 @@ namespace Flier.Controls
     public class DefaultFlierControl : BasicFlier
     {
         public UiJoystick screenJoystick;
+        [Tooltip("Destroy the flier on collision with other flier.")]public bool destroyOnCollision = false;
         private Vector2 InputAxis => new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        public float ThrustPowerDebug = 0.0f;
+        private BasicFlier otherFlier;
         // Update is called once per frame
         protected override void Update()
         {
-            ThrustPowerDebug = screenJoystick.GetThrustPower();
-
             if (screenJoystick.GetThrustPower() > thrustPower)
                 thrustPower = screenJoystick.GetThrustPower();
             if (InputAxis.magnitude > 0.1f)
@@ -26,6 +25,15 @@ namespace Flier.Controls
                 HandleInput(screenJoystick.GetInput());
             }
             base.Update();
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (!destroyOnCollision)
+                return;
+            otherFlier = collision.collider.GetComponentInParent<BasicFlier>();
+            if (otherFlier && destroyOnCollision)
+                Destroy();
         }
     }
 }

@@ -9,7 +9,7 @@ using Flier.BuffSystem;
 namespace Flier
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class BasicFlier : MonoBehaviour, IDirectionInputHandler
+    public class BasicFlier : MonoBehaviour, IDirectionInputHandler, IDamagable
     {
         [Header("Flier Components")]
         [SerializeField] protected Rigidbody flierBody;
@@ -52,12 +52,13 @@ namespace Flier
 
         [Header("Events")]
         public UnityEvent onFlierDestroyed = new UnityEvent();
+        public UnityEvent onFlierRespawned = new UnityEvent();
         protected float AngleOfDirection => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(headingDirection.x, headingDirection.z));
         protected float AngleToAxisInput => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(thrustInputDirection.x, thrustInputDirection.z));
         private float TorqueToDirection => (Mathf.InverseLerp(90, -90, AngleOfDirection) - 0.5f) * 2.0f;
         private bool HasThrustInput => thrustPower > 0.01f && thrustInputDirection.magnitude > 0.01f;
         private bool HasTargetOrMoving => lockAtTarget || HasThrustInput;
-        private bool CanThrustForward => (Mathf.Abs(AngleToAxisInput) < 5 || thrustPower > 0.5f) && Mathf.Abs(AngleToAxisInput) < 120;
+        private bool CanThrustForward => (Mathf.Abs(AngleToAxisInput) < 5 || thrustPower > 0.5f) && (Mathf.Abs(AngleToAxisInput) < 120 && !lockAtTarget);
 
         // Reset is called once the this component added to a game object.
         private void Reset()
@@ -148,12 +149,24 @@ namespace Flier
 
         public void DamageOrHeal(float damage) 
         {
+            if (sFinnal.health == 0 || !enabled)
+                return;
             sFinnal.health = Mathf.Clamp(sFinnal.health + damage, 0, sDefault.health);
             if (sFinnal.health == 0)
-            {
-                onFlierDestroyed?.Invoke();
-                enabled = false;
-            }
+                Destroy();
+        }
+        public void Destroy()
+        {
+            enabled = false;
+            onFlierDestroyed?.Invoke();
+        }
+
+        public void Respawn()
+        {
+            sFinnal.health = sDefault.health;
+            transform.up = Vector3.up;
+            enabled = true;
+            onFlierRespawned?.Invoke();
         }
     }
 }
