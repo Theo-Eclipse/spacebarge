@@ -44,4 +44,10 @@ public class ParallaxCamera : MonoBehaviour
             }
         }
     }
+
+    public void MoveLayers(Vector2 moveXY) 
+    {
+        foreach (var layer in layers)
+            layer.MoveLayer(moveXY * sensetivity);
+    }
 }

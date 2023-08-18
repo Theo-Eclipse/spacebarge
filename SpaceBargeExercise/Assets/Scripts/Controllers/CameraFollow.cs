@@ -33,4 +33,9 @@ public class CameraFollow : MonoBehaviour
     {
         instance.transform.position = instance.followTarget.position;
     }
+
+    public void SetTarget(Transform followTarget) 
+    {
+        this.followTarget = followTarget;
+    }
 }

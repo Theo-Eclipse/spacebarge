@@ -9,6 +9,7 @@ namespace UnityEngine.UI
     public class UiManager : MonoBehaviour
     {
         public static UiManager instance { get; private set; }
+        public MainMenu mainMenu;
         public GameOrtho ortho;
 
         // Start is called before the first frame update
@@ -17,16 +18,26 @@ namespace UnityEngine.UI
             instance = this;
         }
 
-        // Update is called once per frame
+        private void Start()
+        {
+            mainMenu.Init();
+            mainMenu.play.onClick.AddListener(() => mainMenu.SwitchToMenu(ortho));
+            ShowMain();
+        }
 
+        public void ShowMain() 
+        {
+            mainMenu.Show();
+            ortho.Hide();
+        }
     }
 
     [System.Serializable]
     public abstract class UiMenu 
     {
         [SerializeField]protected RectTransform parentContainer;
-        protected virtual void Show() => parentContainer.gameObject.SetActive(false);
-        protected virtual void Hide() => parentContainer.gameObject.SetActive(true);
+        public virtual void Show() => parentContainer.gameObject.SetActive(true);
+        public virtual void Hide() => parentContainer.gameObject.SetActive(false);
         public virtual void SwitchToMenu(UiMenu otherMenu) 
         {
             otherMenu.Show();
@@ -40,6 +51,13 @@ namespace UnityEngine.UI
         [Space] public Button play;
         public Button settings;
         public Button exit;
+
+        public void Init() 
+        {
+            play.onClick.AddListener(() => GameManager.instance.LoadLevel(0));
+            settings.interactable = false;// Still in develoipment.
+            exit.onClick.AddListener(Application.Quit);
+        }
     }
     [System.Serializable]
     public class SettingsMenu : UiMenu

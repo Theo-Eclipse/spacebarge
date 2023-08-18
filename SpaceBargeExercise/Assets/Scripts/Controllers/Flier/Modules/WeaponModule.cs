@@ -33,6 +33,8 @@ namespace Flier.Modules {
 
         [SerializeField] private BasicProjectile projectilePrefab;
         [SerializeField] private Transform projectileSpawnPoint;
+        [SerializeField] private string shootSoundName;
+        [SerializeField] private string hitSoundName;
 
         private IDamagable hitTarget;
         private int projIndex = 0;
@@ -57,6 +59,7 @@ namespace Flier.Modules {
             else
                 for (projIndex = 0; projIndex < sFinnal.projectileCount; projIndex++)
                     LaunchProjectile(AngleToDirection(startAngle + sFinnal.spread * projIndex));
+            
         }
 
         private void LaunchProjectile(Vector3 direction) 
@@ -71,7 +74,6 @@ namespace Flier.Modules {
 
         private void OnShotHit(Collider collider) 
         {
-            Debug.Log($"Object hit: {collider.gameObject.name}");
             hitTarget = collider.GetComponentInParent<IDamagable>();
             if (hitTarget != null)
                 hitTarget.DamageOrHeal(-sFinnal.damagePerHit);

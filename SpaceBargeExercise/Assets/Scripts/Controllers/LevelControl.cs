@@ -12,6 +12,7 @@ public class LevelControl : MonoBehaviour
     {
         UiManager.instance.ortho.SetControls(playerFlier);
         PlayerStats.instance.playerScore = 0;
+        CameraFollow.instance.SetTarget(playerFlier.transform);
         gameObject.SetActive(true);
         // Force Respawn Player.
         // Force Respawn Enemies.

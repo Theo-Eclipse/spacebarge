@@ -7,10 +7,17 @@ namespace AudioSystem
 {
     public class AudioManager : MonoBehaviour
     {
+        public static AudioManager instance { get; private set; }
+        public SoundEffectsPool soundEffects;
+        public BackgroundMusic backgroundMusic;
+        private void Awake()
+        {
+            instance = this;
+        }
         // Start is called before the first frame update
         void Start()
         {
-
+            backgroundMusic.Init();
         }
 
         // Update is called once per frame
@@ -19,28 +26,30 @@ namespace AudioSystem
 
         }
 
-        public void PlaySfx(string soundName) 
+        public static void PlaySfx(string soundName) 
         {
+            instance.soundEffects.PlaySfx(soundName);
         }
 
-        public void PlayMusic(int index) 
+        public static void PlayMusic(int index) 
         {
 
         }
 
-        public void CreateLoopSoundInstance(string soundName) 
+        public static void CreateLoopSoundInstance(string soundName) 
         {
 
         }
     }
 
+    [System.Serializable]
     public class SoundEffectsPool
     {
         [Header("SFX Settings")]
         [SerializeField, Range(0, 1)] private float sfxVolume = 0.75f;
         [SerializeField] private List<BaseSound> soundClips = new List<BaseSound>();
         [SerializeField] private SFX soundWorldPrefab;
-        [Header("Pool Settings")]
+        [Space, Header("Pool Settings")]
         [SerializeField] private Transform poolContainer;
 
         private Queue<SFX> soundInstances = new();
@@ -75,8 +84,30 @@ namespace AudioSystem
 
     }
 
-    public class MusicPlayer 
+    [System.Serializable]
+    public class BackgroundMusic 
     {
-
+        [SerializeField] private List<AudioClip> musicList = new();
+        public int currentMusicIndex = 0;
+        [SerializeField] private MusicPlayer musicPlayer;
+        public void Init() 
+        {
+            LoadMusicVolumeSettings();
+            musicPlayer.onEndReached += PlayNext;
+            musicPlayer.PlayNext(musicList[currentMusicIndex]);
+        }
+        private void PlayNext() 
+        {
+            currentMusicIndex = (currentMusicIndex + 1) % musicList.Count;
+            musicPlayer.PlayNext(musicList[currentMusicIndex]);
+        }
+        private void SaveMusicVolumeSettings() 
+        {
+            //PlayerPrefs.SetFloat("MUSIC_VOLUME", musicVolume);
+        }
+        private void LoadMusicVolumeSettings() 
+        {
+            //musicVolume = PlayerPrefs.GetFloat("MUSIC_VOLUME", 0.75f);
+        }
     }
 }
