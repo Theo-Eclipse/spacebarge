@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Flier.Controls;
 
 namespace UnityEngine.UI
 {
     [RequireComponent(typeof(RectTransform))]
     public class UiJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
     {
-        [Header("Joystick Components")]
-        [SerializeField] private RectTransform handle;
-        [SerializeField] private CanvasGroup joystickColor;
+        [Header("Joystick Settings")]
+        [SerializeField] private DefaultFlierControl controlTarget;
+        private float deadzoneRadius = 0.05f;
+        public float releaseSpeed = 500.0f;
+        public bool dragging = false;
 
         [Header("Joystick Alpha")]
         [SerializeField] private float minimumAlpha = 0.15f;
@@ -18,10 +21,9 @@ namespace UnityEngine.UI
         [SerializeField] private float fadeInSpeed = 2.0f;
         [SerializeField] private float fadeOutSpeed = 1.5f;
 
-        [Header("Joystick Settings")]
-        private float deadzoneRadius = 0.05f;
-        public float releaseSpeed = 500.0f;
-        public bool dragging = false;
+        [Header("Joystick Components")]
+        [SerializeField] private RectTransform handle;
+        [SerializeField] private CanvasGroup joystickColor;
 
         // Joyistick Inputs
         public Vector2 GetInput() => joystickMagnitude > deadzone && dragging ? handle.anchoredPosition.normalized : Vector2.zero;

@@ -2,19 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Flier.Controls;
+using UnityEngine.UI;
 
 public class LevelControl : MonoBehaviour
 {
     [SerializeField] private DefaultFlierControl playerFlier;
     // Start is called before the first frame update
-    void Start()
+    public void Init()
     {
-        
+        UiManager.instance.ortho.SetControls(playerFlier);
+        PlayerStats.instance.playerScore = 0;
+        gameObject.SetActive(true);
+        // Force Respawn Player.
+        // Force Respawn Enemies.
+        // Force Respawn Allies.
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Reset()
     {
-        
+        Init();
     }
 }
