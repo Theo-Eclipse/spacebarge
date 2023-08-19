@@ -7,6 +7,7 @@ namespace Flier.BuffSystem
     public class BuffBehaviour : MonoBehaviour
     {
         [SerializeField] private Buff data;
+        [SerializeField] private string pickupSound = "deBuff";
         private BasicFlier flireInstance;
 
         private void OnTriggerEnter(Collider other)
@@ -14,8 +15,13 @@ namespace Flier.BuffSystem
             Debug.Log($"Trigger entered by: {other.gameObject.name}");
             flireInstance = other.GetComponentInParent<BasicFlier>();
             if (flireInstance)
+            {
                 data.AddBuff(flireInstance);
-            gameObject.SetActive(false);
+                AudioManager.PlaySfx(pickupSound, transform.position);
+                gameObject.SetActive(false);
+            }
         }
+
+
     }
 }

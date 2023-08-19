@@ -29,7 +29,7 @@ namespace UnityEngine.Audio
                 loopAudioSource.Pause();
             if (loopAudioSource.clip && LoopEndReached)
                 OnEndReached();
-            loopAudioSource.volume = Mathf.Lerp(loopAudioSource.volume, targetVolume, fadeSpeed * Time.deltaTime);
+            loopAudioSource.volume = Mathf.Lerp(loopAudioSource.volume, targetVolume * baseVolume, fadeSpeed * Time.deltaTime);
         }
 
         private void OnEndReached()

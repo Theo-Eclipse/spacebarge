@@ -15,6 +15,7 @@ public class AudioManager : MonoBehaviour
 
     public BackgroundMusic backgroundMusic;
     private float volume = 0;
+    private static Vector2 audioRange = new Vector2(-50.0f, 5.0f);
     private void Awake()
     {
         instance = this;
@@ -25,30 +26,33 @@ public class AudioManager : MonoBehaviour
         LoadMusicVolumeSettings();
         backgroundMusic.Init();
     }
-
-    // Update is called once per frame
-    void Update()
+    private void OnApplicationQuit()
     {
-
+        SaveMusicVolumeSettings();
     }
 
-    public static void PlaySfx(string soundName, Vector3 position)
+    public static void PlaySfx(string soundName, Vector3 position) => instance.soundEffects.PlaySfx(soundName, position);
+    public static LoopSfx CreateLoopSoundInstance(string soundName, Transform parent) => instance.loopSounds.CreateInstance(soundName, parent);
+    public static void SetMusicVolume(float volume) => instance.musicMixer.SetFloat("MusicVolume", Mathf.Lerp(audioRange.x, audioRange.y, volume));
+    public static void SetSfxVolume(float volume) => instance.musicMixer.SetFloat("SfxVolume", Mathf.Lerp(audioRange.x, audioRange.y, volume));
+    public static void SetMasterVolume(float volume) => instance.musicMixer.SetFloat("MasterVolume", Mathf.Lerp(audioRange.x, audioRange.y, volume));
+    public static void SetMixerVolume(string parameter, float volume) => instance.musicMixer.SetFloat(parameter, Mathf.Lerp(audioRange.x, audioRange.y, volume));
+    public static float GetMixerVolume(string parameter)
     {
-        instance.soundEffects.PlaySfx(soundName, position);
-    }
-
-    public static LoopSfx CreateLoopSoundInstance(string soundName, Transform parent)
-    {
-        return instance.loopSounds.CreateInstance(soundName, parent);
+        instance.musicMixer.GetFloat(parameter, out instance.volume);
+        return Mathf.InverseLerp(audioRange.x, audioRange.y, instance.volume);
     }
     private void SaveMusicVolumeSettings()
     {
-        musicMixer.GetFloat("MusicVolume", out volume);
-        PlayerPrefs.SetFloat("MUSIC_VOLUME", volume);
+        PlayerPrefs.SetFloat("MASTER_VOLUME", GetMixerVolume("MasterVolume"));
+        PlayerPrefs.SetFloat("SFX_VOLUME", GetMixerVolume("SfxVolume"));
+        PlayerPrefs.SetFloat("MUSIC_VOLUME", GetMixerVolume("MusicVolume"));
     }
     private void LoadMusicVolumeSettings()
     {
-        musicMixer.SetFloat("MusicVolume", PlayerPrefs.GetFloat("MUSIC_VOLUME", 0.75f));
+        SetMixerVolume("MasterVolume", PlayerPrefs.GetFloat("MASTER_VOLUME", 1.0f));
+        SetMixerVolume("SfxVolume", PlayerPrefs.GetFloat("SFX_VOLUME", 0.75f));
+        SetMixerVolume("MusicVolume", PlayerPrefs.GetFloat("MUSIC_VOLUME", 0.35f));
     }
 }
 

@@ -55,7 +55,6 @@ namespace UnityEngine.UI
         public void Init() 
         {
             play.onClick.AddListener(() => GameManager.instance.LoadLevel(0));
-            settings.interactable = false;// Still in develoipment.
             exit.onClick.AddListener(Application.Quit);
         }
     }

@@ -41,6 +41,8 @@ namespace UnityEngine.UI
 
         private void ResetFireModules() 
         {
+            if (targetFlier == null || moduleCache == null)
+                return;
             targetFlier.GetComponentsInChildren(false, moduleCache);
             foreach (var module in moduleCache)
                 module.toggleFire = false;
