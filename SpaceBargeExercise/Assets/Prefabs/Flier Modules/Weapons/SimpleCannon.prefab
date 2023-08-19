@@ -152,6 +152,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1497157591029675929, guid: bacdbc4bf0006fe479d432f83100b81f,
     type: 3}
   projectileSpawnPoint: {fileID: 6131851605061140248}
+  shootSoundName: shoot1
 --- !u!1 &6131851604434707919
 GameObject:
   m_ObjectHideFlags: 0

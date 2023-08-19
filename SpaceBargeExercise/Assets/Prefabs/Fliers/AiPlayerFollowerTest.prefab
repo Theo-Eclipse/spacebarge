@@ -768,7 +768,7 @@ GameObject:
   - component: {fileID: 5302537213115503975}
   - component: {fileID: 5302537213115503968}
   m_Layer: 0
-  m_Name: PlayerFollowerTest
+  m_Name: AiPlayerFollowerTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -845,6 +845,7 @@ MonoBehaviour:
   thrustInputDirection: {x: 0, y: 0, z: 1}
   headingDirection: {x: 0, y: 0, z: 1}
   lockAtTarget: {fileID: 0}
+  destructionSound: explode
   onFlierDestroyed:
     m_PersistentCalls:
       m_Calls:
@@ -1699,6 +1700,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131851603402675545, guid: 3c506b8decea7c24ab59ee7325eb0ca8,
+        type: 3}
+      propertyPath: sFinnal.shootInterval
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131851603402675545, guid: 3c506b8decea7c24ab59ee7325eb0ca8,
+        type: 3}
+      propertyPath: sDefault.shootInterval
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6131851603402675547, guid: 3c506b8decea7c24ab59ee7325eb0ca8,
         type: 3}

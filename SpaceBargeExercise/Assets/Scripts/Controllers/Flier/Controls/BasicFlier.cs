@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Flier.BuffSystem;
+using UnityEngine.Audio;
 
 namespace Flier
 {
@@ -50,9 +51,13 @@ namespace Flier
         public Dictionary<Type, Buff> effects = new Dictionary<Type, Buff>();
         public List<Type> removeEffects = new List<Type>();
 
+        [Header("Flier Sounds")]
+        public string destructionSound = "";
+
         [Header("Events")]
         public UnityEvent onFlierDestroyed = new UnityEvent();
         public UnityEvent onFlierRespawned = new UnityEvent();
+        public bool isAlive => sFinnal.health > 0;
         protected float AngleOfDirection => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(headingDirection.x, headingDirection.z));
         protected float AngleToAxisInput => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(thrustInputDirection.x, thrustInputDirection.z));
         private float TorqueToDirection => (Mathf.InverseLerp(90, -90, AngleOfDirection) - 0.5f) * 2.0f;
@@ -84,9 +89,9 @@ namespace Flier
                 ThrustForward();
 
             foreach (var thruster in forwardThrusters)
-                if (CanThrustForward && thrustPower >= 0.25f && !thruster.isPlaying)
+                if (thrustPower >= 0.25f && !thruster.isPlaying)
                     thruster.Play();
-                else if ((!CanThrustForward || thrustPower < 0.25f) && thruster.isPlaying)
+                else if (thrustPower < 0.25f && thruster.isPlaying)
                     thruster.Stop();
 
             ApplyVelocityAndInputDumping();
@@ -157,6 +162,8 @@ namespace Flier
         }
         public void Destroy()
         {
+            if (!string.IsNullOrEmpty(destructionSound))
+                AudioManager.PlaySfx(destructionSound, transform.position);
             enabled = false;
             onFlierDestroyed?.Invoke();
         }

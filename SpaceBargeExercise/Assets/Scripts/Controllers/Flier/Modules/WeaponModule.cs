@@ -28,23 +28,27 @@ namespace Flier.Modules {
             projectileCount = 1,
             profectileLifeTime = 3
         };
-
         public float reloadProgress => Mathf.InverseLerp(shootReadyTime - sFinnal.shootInterval, shootReadyTime, Time.time);
-
         [SerializeField] private BasicProjectile projectilePrefab;
         [SerializeField] private Transform projectileSpawnPoint;
+
+        [Header("Sounds")]
         [SerializeField] private string shootSoundName;
-        [SerializeField] private string hitSoundName;
+
 
         private IDamagable hitTarget;
+        private BasicFlier moduleHolder;
         private int projIndex = 0;
         private float shootReadyTime = 0;
         private float startAngle => -(sFinnal.spread * (sFinnal.projectileCount-1)) * 0.5f;
-
+        private void Start()
+        {
+            moduleHolder = GetComponentInParent<BasicFlier>();
+        }
         // Update is called once per frame
         public void Update()
         {
-            if (!toggleFire)
+            if (!toggleFire || !moduleHolder.isAlive)
                 return;
             Shoot();
         }
@@ -59,7 +63,8 @@ namespace Flier.Modules {
             else
                 for (projIndex = 0; projIndex < sFinnal.projectileCount; projIndex++)
                     LaunchProjectile(AngleToDirection(startAngle + sFinnal.spread * projIndex));
-            
+            if(!string.IsNullOrEmpty(shootSoundName))
+                AudioManager.PlaySfx(shootSoundName, projectileSpawnPoint.position);
         }
 
         private void LaunchProjectile(Vector3 direction) 

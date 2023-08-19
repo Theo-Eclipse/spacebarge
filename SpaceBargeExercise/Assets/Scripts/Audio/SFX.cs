@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AudioSystem
+namespace UnityEngine.Audio
 {
     public class SFX : MonoBehaviour
     {
         [SerializeField] private AudioSource audioSource;
         public System.Action<SFX> onEndReached;
         public bool EndReached => (audioSource.clip.length - audioSource.time) <= 0.1f;
-        public void SetClipAndPlay(AudioClip clip, float defaultVolume = 0.75f) 
+        public void SetClipAndPlay(BaseSound clip) 
         {
-            audioSource.clip = clip;
-            audioSource.volume = defaultVolume;
+            audioSource.clip = clip.audioClip;
+            audioSource.volume = clip.volume;
             audioSource.time = 0;
             audioSource.Play();
         }
 
         private void Update()
         {
-            if (audioSource.isPlaying && EndReached) 
+            if (!audioSource.isPlaying) 
             {
                 audioSource.Stop();
                 onEndReached?.Invoke(this);

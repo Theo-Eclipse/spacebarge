@@ -6,7 +6,7 @@ public class MusicPlayer : MonoBehaviour
 {
     [SerializeField] private AudioSource globalAudioSource;
     [SerializeField, Tooltip("Audio will fade in and out")] private float fadeTime = 0.5f;
-    public float globalMusicVolume = 0.75f;
+    public float baseVolume = 0.75f;
     public bool targetPlayState = false;
     public bool EndReached => (globalAudioSource.clip.length - globalAudioSource.time) <= 0.1f && fadeVolume > 0;
     public System.Action onEndReached;
@@ -19,7 +19,7 @@ public class MusicPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        globalAudioSource.volume = globalMusicVolume * fadeVolume;
+        globalAudioSource.volume = baseVolume * fadeVolume;
         if (AudioIsPaused && targetPlayState)
             globalAudioSource.Play();
         if (DoUpdateFade)

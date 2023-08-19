@@ -11,6 +11,7 @@ namespace Flier.Weapons.Projectiles
         public float speed = 10;
         public float lifeTime = 10;
         public LayerMask hitMask;
+        public string hitSound = "";
 
         [Header("Events")]
         public ProjectileHitEvent onColliderHit = new ProjectileHitEvent();
@@ -24,10 +25,16 @@ namespace Flier.Weapons.Projectiles
         {
             if (Physics.Raycast(projectileUpdate, out hit, positionDelta.magnitude, hitMask))
             {
-                onColliderHit?.Invoke(hit.collider);
-                onDestroy?.Invoke();
+                OnHit();
                 return;
             }
+        }
+        private void OnHit()
+        {
+            if (!string.IsNullOrEmpty(hitSound))
+                AudioManager.PlaySfx(hitSound, hit.point);
+            onColliderHit?.Invoke(hit.collider);
+            onDestroy?.Invoke();
         }
         protected virtual void OnEnable() 
         {
