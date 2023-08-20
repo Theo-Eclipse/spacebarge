@@ -21,7 +21,7 @@ namespace Flier.BuffSystem
     {
         [Header("Effect")]
         public float duration;
-        public StackEffect stackEffect = StackEffect.DiscardExisting;
+        public StackEffect stackEffect = StackEffect.DiscardAdded;
         public abstract void EnableEffect(T flier);
         public abstract void DisableEffect(T flier);
     }
@@ -35,22 +35,22 @@ namespace Flier.BuffSystem
         public void AddBuff(BasicFlier flierInstance)
         {
             this.flierInstance = flierInstance;
-            Type buffType = buffData.buffEffectInstance.GetType();
-            if (buffData.buffEffectInstance.duration == 0) 
-                buffData.buffEffectInstance.EnableEffect(flierInstance);// 0 duration - means permanent - activate the buff without adding it to effects list.
+            Type buffType = buffData.buffEffect.GetType();
+            if (buffData.buffEffect.duration == 0) 
+                buffData.buffEffect.EnableEffect(flierInstance);// 0 duration - means permanent - activate the buff without adding it to effects list.
             else if (flierInstance.effects.ContainsKey(buffType))
                 StackOverExistingEffect(flierInstance.effects[buffType]);
             else
             {
                 flierInstance.effects.Add(buffType, this);
-                buffData.buffEffectInstance.EnableEffect(flierInstance);
-                activeTime = buffData.buffEffectInstance.duration;
+                buffData.buffEffect.EnableEffect(flierInstance);
+                activeTime = buffData.buffEffect.duration;
             }
 
         }
         public void UpdateTimer(float deltaTime) 
         {
-            if (activeTime == 0 || buffData.buffEffectInstance.duration == 0)
+            if (activeTime == 0 || buffData.buffEffect.duration == 0)
                 return;
             activeTime = activeTime - deltaTime >= 0 ? activeTime - deltaTime : 0;
             if (activeTime == 0)
@@ -58,30 +58,33 @@ namespace Flier.BuffSystem
         }
         public void RemoveBuff() 
         {
-            Type buffType = buffData.buffEffectInstance.GetType();
-            buffData.buffEffectInstance.DisableEffect(flierInstance);
+            Type buffType = buffData.buffEffect.GetType();
+            buffData.buffEffect.DisableEffect(flierInstance);
             if(!flierInstance.removeEffects.Contains(buffType))
                 flierInstance.removeEffects.Add(buffType);
             flierInstance = null;
         }
-        private void StackOverExistingEffect(Buff otherBuff)
+        private void StackOverExistingEffect(Buff newBuff)
         {
-            switch (buffData.buffEffectInstance.stackEffect)
+            switch (buffData.buffEffect.stackEffect)
             {
-                case StackEffect.DiscardExisting:
+                case StackEffect.DiscardAdded:
                     return;
                 case StackEffect.OverrideExisting:
-                    otherBuff.buffData = buffData;
-                    otherBuff.activeTime = buffData.buffEffectInstance.duration;
-                    buffData.buffEffectInstance.EnableEffect(flierInstance);
+                    newBuff.buffData = buffData;
+                    newBuff.activeTime = buffData.buffEffect.duration;
+                    buffData.buffEffect.EnableEffect(flierInstance);
                     return;
                 case StackEffect.OverrideAndIncreaseDuration:
-                    otherBuff.buffData = buffData;
-                    otherBuff.activeTime += buffData.buffEffectInstance.duration;
-                    buffData.buffEffectInstance.EnableEffect(flierInstance);
+                    newBuff.buffData = buffData;
+                    newBuff.activeTime += buffData.buffEffect.duration;
+                    buffData.buffEffect.EnableEffect(flierInstance);
                     return;
                 case StackEffect.IncreaseDuration:
-                    otherBuff.activeTime += buffData.buffEffectInstance.duration;
+                    newBuff.activeTime += buffData.buffEffect.duration;
+                    return;
+                case StackEffect.ResetDuration:
+                    newBuff.activeTime = buffData.buffEffect.duration;
                     return;
             }
         }
@@ -94,7 +97,8 @@ namespace Flier.BuffSystem
     }
     public enum StackEffect
     {
-        DiscardExisting,
+        DiscardAdded,
+        ResetDuration,
         OverrideExisting,
         IncreaseDuration,
         OverrideAndIncreaseDuration

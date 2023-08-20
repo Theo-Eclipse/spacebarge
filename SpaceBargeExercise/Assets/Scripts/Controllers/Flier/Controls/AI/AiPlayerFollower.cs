@@ -6,7 +6,7 @@ namespace Flier.Controls.AI
 {
     public class AiPlayerFollower : BasicAiFlier
     {
-        [Header("Follow Settings")]
+        [Space, Header("Follow Settings")]
         public bool enableFollowing = true;
         public float followDistance = 4;
         public float updateInterval = 2;
@@ -39,6 +39,8 @@ namespace Flier.Controls.AI
 
         protected override void OnDrawGizmos()
         {
+            if (!showGizmos)
+                return;
             base.OnDrawGizmos();
             if (!followTarget || !enableFollowing)
                 return;

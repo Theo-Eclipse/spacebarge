@@ -6,6 +6,8 @@ namespace Flier.Controls.AI
 {
     public class BasicAiFlier : BasicFlier
     {
+        public bool showGizmos = false;
+        [Space, Space]
         [Space, Header("AI Waypoint")]
         public Vector3 destinationPoint = Vector3.zero;
         public Vector3 wayPoint = Vector3.zero;
@@ -121,6 +123,8 @@ namespace Flier.Controls.AI
 
         protected virtual void OnDrawGizmos()
         {
+            if (!showGizmos)
+                return;
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(wayPoint, 0.5f);
             Gizmos.color = Color.blue;

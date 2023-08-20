@@ -8,6 +8,6 @@ namespace Flier.BuffSystem
     public class BuffData : ScriptableObject
     {
         public BuffInfo buffInfo;
-        public SpeedEffect buffEffectInstance;
+        public SpeedEffect buffEffect;
     }
 }

@@ -29,7 +29,7 @@ namespace Flier.Modules {
             profectileLifeTime = 3
         };
         public float reloadProgress => Mathf.InverseLerp(shootReadyTime - sFinnal.shootInterval, shootReadyTime, Time.time);
-        [SerializeField] private BasicProjectile projectilePrefab;
+        public BasicProjectile projectilePrefab;
         [SerializeField] private Transform projectileSpawnPoint;
 
         [Header("Sounds")]

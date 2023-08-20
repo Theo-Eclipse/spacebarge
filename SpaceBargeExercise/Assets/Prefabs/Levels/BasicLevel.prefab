@@ -1660,6 +1660,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5302537213115503968, guid: 956ef88058c374f44a06801dcc358ba0,
         type: 3}
+      propertyPath: showGizmos
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5302537213115503968, guid: 956ef88058c374f44a06801dcc358ba0,
+        type: 3}
       propertyPath: followTarget
       value: 
       objectReference: {fileID: 1189495180601769891}

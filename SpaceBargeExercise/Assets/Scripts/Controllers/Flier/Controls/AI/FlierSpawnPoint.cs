@@ -6,7 +6,10 @@ namespace Flier.Controls
 {
     public class FlierSpawnPoint : MonoBehaviour, ILevelControl
     {
+        public bool showGizmos = false;
+        [Space, Space]
         [SerializeField] private BasicFlier aiInstance;
+        [SerializeField] private List<Transform> spawnLocations = new();
         public float respawnTimer = 0;
 
         private float nextRespawnTime = 0;
@@ -46,6 +49,8 @@ namespace Flier.Controls
         }
         private void OnDrawGizmos()
         {
+            if (!showGizmos)
+                return;
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, 1.5f);
         }

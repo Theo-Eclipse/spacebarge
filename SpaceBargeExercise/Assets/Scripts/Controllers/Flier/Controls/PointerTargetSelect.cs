@@ -8,6 +8,8 @@ namespace Flier.Controls
 {
     public class PointerTargetSelect : MonoBehaviour
     {
+        public bool showGizmos = false;
+        [Space, Space, Space]
         [SerializeField] private DefaultFlierControl playerFlier;
         [SerializeField] private LayerMask castLayer;
         [SerializeField] private float castRadius = 1.5f;
@@ -96,6 +98,8 @@ namespace Flier.Controls
 
         private void OnDrawGizmos()
         {
+            if (!showGizmos)
+                return;
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(lastWorldClickPosition, castRadius);
             Gizmos.color = Color.red;
