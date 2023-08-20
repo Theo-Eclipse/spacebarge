@@ -1299,6 +1299,9 @@ MonoBehaviour:
     - name: deBuff
       volume: 1
       audioClip: {fileID: 8300000, guid: 559f413a9d3857743844695a9c208e6a, type: 3}
+    - name: buff
+      volume: 1
+      audioClip: {fileID: 8300000, guid: 68a194273d13ecc408ee04a9d2a59f6d, type: 3}
     poolContainer: {fileID: 2111612157}
   loopSounds:
     soundPrefab: {fileID: 4467504884777521457, guid: c91adae9f54967a4e9d6a4116e656750,

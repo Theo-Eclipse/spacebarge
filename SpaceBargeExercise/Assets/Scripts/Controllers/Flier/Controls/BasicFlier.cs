@@ -57,6 +57,8 @@ namespace Flier
         [Header("Events")]
         public UnityEvent onFlierDestroyed = new UnityEvent();
         public UnityEvent onFlierRespawned = new UnityEvent();
+
+        public bool isImmortal = false;
         public bool isAlive => sFinnal.health > 0;
         protected float AngleOfDirection => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(headingDirection.x, headingDirection.z));
         protected float AngleToAxisInput => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(thrustInputDirection.x, thrustInputDirection.z));
@@ -154,7 +156,7 @@ namespace Flier
 
         public void DamageOrHeal(float damage) 
         {
-            if (sFinnal.health == 0 || !enabled)
+            if (sFinnal.health == 0 || !enabled || isImmortal)
                 return;
             sFinnal.health = Mathf.Clamp(sFinnal.health + damage, 0, sDefault.health);
             if (sFinnal.health == 0)

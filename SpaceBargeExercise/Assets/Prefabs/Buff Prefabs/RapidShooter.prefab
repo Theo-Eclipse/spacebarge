@@ -1,5 +1,50 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2413401942870536372
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8507625248023618203}
+  - component: {fileID: 1768331590912011725}
+  m_Layer: 4
+  m_Name: collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8507625248023618203
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2413401942870536372}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9057064191629501637}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1768331590912011725
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2413401942870536372}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.39
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9057064191143894538
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,9 +55,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9057064191143894541}
   - component: {fileID: 9057064191143894543}
-  - component: {fileID: 9057064191143894540}
   m_Layer: 4
-  m_Name: Sphere
+  m_Name: icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,7 +71,7 @@ Transform:
   m_GameObject: {fileID: 9057064191143894538}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 0.45210335, y: 0.45210335, z: 0.45210335}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9057064191629501637}
@@ -74,8 +118,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 65f0e363b74cf5845ab8c3fbc14f39ac, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: d4799d80e5560d146aaea46f9427ccac, type: 3}
+  m_Color: {r: 1, g: 0.97877717, b: 0.4575472, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -85,19 +129,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!135 &9057064191143894540
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9057064191143894538}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.13
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9057064191325635885
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,7 +352,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 0.41037738, b: 0.41037738, a: 1}
+      maxColor: {r: 1, g: 0.98039216, b: 0.45882353, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4922,7 +4953,7 @@ GameObject:
   - component: {fileID: 9057064191629501636}
   - component: {fileID: 9057064191629501639}
   m_Layer: 4
-  m_Name: SlowDownDebuff
+  m_Name: RapidShooter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4942,6 +4973,7 @@ Transform:
   m_Children:
   - {fileID: 9057064191143894541}
   - {fileID: 9057064191325635884}
+  - {fileID: 8507625248023618203}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4958,9 +4990,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    buffData: {fileID: 11400000, guid: 66f6840fefd782d4380644965b44502a, type: 2}
+    buffData: {fileID: 11400000, guid: dec06a6903e39ad448534c78fa8eb728, type: 2}
     activeTime: 0
-  pickupSound: deBuff
+  pickupSound: buff
 --- !u!54 &9057064191629501639
 Rigidbody:
   m_ObjectHideFlags: 0

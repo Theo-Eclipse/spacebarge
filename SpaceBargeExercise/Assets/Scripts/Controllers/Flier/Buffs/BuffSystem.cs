@@ -29,28 +29,31 @@ namespace Flier.BuffSystem
     [Serializable]
     public class Buff 
     {
-        public BuffData buffData;
+        public BuffScriptableObject buffData;
         private BasicFlier flierInstance;
+        [HideInInspector]
         public float activeTime = 0;
+        private BuffEffect<BasicFlier> effect;
         public void AddBuff(BasicFlier flierInstance)
         {
             this.flierInstance = flierInstance;
-            Type buffType = buffData.buffEffect.GetType();
-            if (buffData.buffEffect.duration == 0) 
-                buffData.buffEffect.EnableEffect(flierInstance);// 0 duration - means permanent - activate the buff without adding it to effects list.
+            buffData.GetEffect(out effect);
+            Type buffType = effect.GetType();
+            if (effect.duration == 0) 
+                effect.EnableEffect(flierInstance);// 0 duration - means permanent - activate the buff without adding it to effects list.
             else if (flierInstance.effects.ContainsKey(buffType))
                 StackOverExistingEffect(flierInstance.effects[buffType]);
             else
             {
                 flierInstance.effects.Add(buffType, this);
-                buffData.buffEffect.EnableEffect(flierInstance);
-                activeTime = buffData.buffEffect.duration;
+                effect.EnableEffect(flierInstance);
+                activeTime = effect.duration;
             }
 
         }
         public void UpdateTimer(float deltaTime) 
         {
-            if (activeTime == 0 || buffData.buffEffect.duration == 0)
+            if (activeTime == 0 || effect.duration == 0)
                 return;
             activeTime = activeTime - deltaTime >= 0 ? activeTime - deltaTime : 0;
             if (activeTime == 0)
@@ -58,33 +61,33 @@ namespace Flier.BuffSystem
         }
         public void RemoveBuff() 
         {
-            Type buffType = buffData.buffEffect.GetType();
-            buffData.buffEffect.DisableEffect(flierInstance);
+            Type buffType = effect.GetType();
+            effect.DisableEffect(flierInstance);
             if(!flierInstance.removeEffects.Contains(buffType))
                 flierInstance.removeEffects.Add(buffType);
             flierInstance = null;
         }
         private void StackOverExistingEffect(Buff newBuff)
         {
-            switch (buffData.buffEffect.stackEffect)
+            switch (effect.stackEffect)
             {
                 case StackEffect.DiscardAdded:
                     return;
                 case StackEffect.OverrideExisting:
                     newBuff.buffData = buffData;
-                    newBuff.activeTime = buffData.buffEffect.duration;
-                    buffData.buffEffect.EnableEffect(flierInstance);
+                    newBuff.activeTime = effect.duration;
+                    effect.EnableEffect(flierInstance);
                     return;
                 case StackEffect.OverrideAndIncreaseDuration:
                     newBuff.buffData = buffData;
-                    newBuff.activeTime += buffData.buffEffect.duration;
-                    buffData.buffEffect.EnableEffect(flierInstance);
+                    newBuff.activeTime += effect.duration;
+                    effect.EnableEffect(flierInstance);
                     return;
                 case StackEffect.IncreaseDuration:
-                    newBuff.activeTime += buffData.buffEffect.duration;
+                    newBuff.activeTime += effect.duration;
                     return;
                 case StackEffect.ResetDuration:
-                    newBuff.activeTime = buffData.buffEffect.duration;
+                    newBuff.activeTime = effect.duration;
                     return;
             }
         }

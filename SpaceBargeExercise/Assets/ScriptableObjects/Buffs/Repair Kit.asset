@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d803d8e861649114a9c9de7cf0627346, type: 3}
-  m_Name: SlowDown
+  m_Script: {fileID: 11500000, guid: c4cdbc9df756db845ae8855f92620729, type: 3}
+  m_Name: Repair Kit
   m_EditorClassIdentifier: 
   buffInfo:
-    buffName: SlowDown
-    description: 10% Acceleration speed! Fly safe!
-    buffIcon: {fileID: 21300000, guid: 65f0e363b74cf5845ab8c3fbc14f39ac, type: 3}
+    buffName: Repair Kit
+    description: Fully restores your health!
+    buffIcon: {fileID: 21300000, guid: 64d3f1e4ed23ac84aa496dd726215a6f, type: 3}
   buffEffect:
     duration: 0
-    stackEffect: 1
-    value: 0.1
-    effectType: 1
+    stackEffect: 0
+    value: 100
+    effectType: 2
