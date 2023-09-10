@@ -1,4 +1,4 @@
 public interface IDirectionInputHandler
 {
-    void HandleInput(UnityEngine.Vector2 input);
+    void HandleMoveInput(UnityEngine.Vector2 input);
 }

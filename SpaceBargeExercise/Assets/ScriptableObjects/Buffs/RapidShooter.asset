@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buffInfo:
     buffName: Rapid Shooter
-    description: Grants 200% of original fire rate for 10 seconds!
+    description: Grants 300% of original fire rate for 10 seconds!
     buffIcon: {fileID: 21300000, guid: d4799d80e5560d146aaea46f9427ccac, type: 3}
   buffEffect:
     duration: 10
-    stackEffect: 1
-    value: 0.5
+    stackEffect: 3
+    value: 0.333
     effectType: 1

@@ -18,6 +18,6 @@ MonoBehaviour:
     buffIcon: {fileID: 21300000, guid: 64d3f1e4ed23ac84aa496dd726215a6f, type: 3}
   buffEffect:
     duration: 0
-    stackEffect: 0
+    stackEffect: 2
     value: 100
     effectType: 2

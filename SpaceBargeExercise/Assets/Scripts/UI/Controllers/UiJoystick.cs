@@ -10,8 +10,7 @@ namespace UnityEngine.UI
     public class UiJoystick : MonoBehaviour, IDragHandler, IEndDragHandler
     {
         [Header("Joystick Settings")]
-        [SerializeField] private DefaultFlierControl controlTarget;
-        private float deadzoneRadius = 0.05f;
+        public float deadzoneRadius = 0.05f;
         public float releaseSpeed = 500.0f;
         public bool dragging = false;
 
@@ -20,6 +19,9 @@ namespace UnityEngine.UI
         [SerializeField] private float maximumAlpha = 0.85f;
         [SerializeField] private float fadeInSpeed = 2.0f;
         [SerializeField] private float fadeOutSpeed = 1.5f;
+
+        private Vector2 debugInput;
+        private float debugThrust;
 
         [Header("Joystick Components")]
         [SerializeField] private RectTransform handle;
@@ -46,6 +48,8 @@ namespace UnityEngine.UI
             if (!dragging)
                 handle.anchoredPosition = Vector2.MoveTowards(handle.anchoredPosition, Vector2.zero, releaseSpeed * Time.deltaTime);
             UpdateUiTransparency();
+            debugInput = GetInput();
+            debugThrust = GetThrustPower();
         }
         void UpdateUiTransparency()
         {

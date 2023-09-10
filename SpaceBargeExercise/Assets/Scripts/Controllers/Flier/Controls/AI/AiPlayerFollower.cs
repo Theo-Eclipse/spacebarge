@@ -11,7 +11,7 @@ namespace Flier.Controls.AI
         public float followDistance = 4;
         public float updateInterval = 2;
         public Transform followTarget;
-        private Vector3 FollowPosition => followTarget.position - (followTarget.position - transform.position).normalized * followDistance;
+        private Vector3 FollowPosition => followTarget.position;
 
         private float followIntervalHit;
         // Update is called once per frame

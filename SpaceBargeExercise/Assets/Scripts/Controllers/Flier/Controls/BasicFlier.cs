@@ -1,11 +1,8 @@
+using Flier.BuffSystem;
 using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using Flier.BuffSystem;
-using UnityEngine.Audio;
 
 namespace Flier
 {
@@ -44,6 +41,7 @@ namespace Flier
         [Range(0, 1)]
         public float thrustPower = 0.0f;
         public Vector3 thrustInputDirection;
+        public Vector3 turnInputDirection;
         public Vector3 headingDirection;
         public Transform lockAtTarget;
 
@@ -61,11 +59,12 @@ namespace Flier
         public bool isImmortal = false;
         public bool isAlive => sFinnal.health > 0;
         protected float AngleOfDirection => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(headingDirection.x, headingDirection.z));
+        protected float AngleOfVelocity => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(flierBody.velocity.x, flierBody.velocity.z).normalized);
         protected float AngleToAxisInput => Vector2.SignedAngle(new Vector2(transform.forward.x, transform.forward.z), new Vector2(thrustInputDirection.x, thrustInputDirection.z));
         private float TorqueToDirection => (Mathf.InverseLerp(90, -90, AngleOfDirection) - 0.5f) * 2.0f;
         private bool HasThrustInput => thrustPower > 0.01f && thrustInputDirection.magnitude > 0.01f;
-        private bool HasTargetOrMoving => lockAtTarget || HasThrustInput;
-        private bool CanThrustForward => (Mathf.Abs(AngleToAxisInput) < 5 || thrustPower > 0.5f) && (Mathf.Abs(AngleToAxisInput) < 120 && !lockAtTarget);
+        private bool LookAtDirection => lockAtTarget || turnInputDirection.magnitude > 0.1 || HasThrustInput;
+        private bool IsThrustingForward => (Mathf.Abs(AngleToAxisInput) < 30 && HasThrustInput);
 
         // Reset is called once the this component added to a game object.
         private void Reset()
@@ -83,11 +82,11 @@ namespace Flier
         protected virtual void Update()
         {
             GetHeading();
-            if (HasTargetOrMoving)
+            if (LookAtDirection)
                 RotateTowardsTarget();
             if (HasThrustInput)
                 ThrustManeur();
-            if (HasThrustInput && CanThrustForward)
+            if (IsThrustingForward)
                 ThrustForward();
 
             foreach (var thruster in forwardThrusters)
@@ -104,7 +103,10 @@ namespace Flier
         {
             if (lockAtTarget)
                 headingDirection = lockAtTarget.position - transform.position;
-            else headingDirection = thrustInputDirection.normalized;
+            else if(turnInputDirection.magnitude > 0.1) 
+                headingDirection = turnInputDirection.normalized;
+            else
+                headingDirection = thrustInputDirection.normalized;
         }
 
         private void RotateTowardsTarget()
@@ -137,9 +139,13 @@ namespace Flier
                 flierBody.velocity *= sFinnal.velocityDumping;
         }
 
-        public void HandleInput(Vector2 input)
+        public void HandleMoveInput(Vector2 input)
         {
             thrustInputDirection = new Vector3(input.x, 0, input.y);
+        }
+        public void HandleLookInput(Vector2 input)
+        {
+            turnInputDirection = new Vector3(input.x, 0, input.y);
         }
 
         public void UpdateEffectTimers() 

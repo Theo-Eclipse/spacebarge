@@ -48,7 +48,7 @@ namespace Flier.Controls.AI
         {
             if (InputAxis.magnitude > 0.1f)
             {
-                HandleInput(InputAxis);
+                HandleMoveInput(InputAxis);
                 thrustPower = move ? TargetThrust() : 0.0f;
             }
             if (Vector3.Distance(wayPoint, destinationPoint) > 0.5f)
@@ -76,9 +76,9 @@ namespace Flier.Controls.AI
         {
             move = true;
             wayPoint = destinationPoint - transform.position;
-            if (wayPoint.magnitude < castDistance && DestinationIsObscured())
+            /*if (wayPoint.magnitude < castDistance && DestinationIsObscured())
                 OnWayPointReached();
-            else if (CastTest(wayPoint.normalized))
+            else*/ if (CastTest(wayPoint.normalized))
                 wayPoint = GetAvoidObstaclePoint(destinationPoint);
             else if (wayPoint.magnitude < castDistance && !DestinationIsObscured())
                 wayPoint = transform.position + wayPoint;
